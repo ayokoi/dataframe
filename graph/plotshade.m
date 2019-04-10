@@ -16,7 +16,9 @@ patchcolor='r';
 transp=0.3;
 flip=0;
 ERRD=ERR;
-vararginoptions(varargin,{'patchcolor','transp','flip','ERRD'});
+edgecolor = 'none';
+edgewidth = 0.1;
+vararginoptions(varargin,{'patchcolor','transp','flip','ERRD','edgecolor','edgewidth'});
 i=find(~isnan(PLOT+ERR)); 
 Y=[PLOT(i)+ERR(i) fliplr(PLOT(i)-ERRD(i))];
 X=[x(i) fliplr(x(i))];
@@ -27,4 +29,5 @@ else
 end;    
 set (h, 'FaceColor',patchcolor);
 set(h,'FaceAlpha',transp);
-set (h, 'EdgeColor','none');
+set (h, 'EdgeColor',edgecolor);
+set (h, 'LineWidth',edgewidth);

@@ -32,5 +32,12 @@ if (~isempty(leg))
             legend(gca,'off');
         end;
     end;
-    legend(gca,'boxoff');
+    legend(gca,'boxoff');    
 end;  
+% deal with text color
+tmp = get(gcf,'children');
+for i=1%:length(tmp)
+    if isa(tmp(i), 'matlab.graphics.illustration.Legend');
+        set(tmp(i), 'textcolor', get(gca,'xcolor'));
+    end
+end

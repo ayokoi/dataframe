@@ -29,7 +29,10 @@ F.linecolor={[0 0 1],[1 0 0],[0 1 0],[0 0 0],[1 1 0]};
 F.patchcolor={[0 0 1],[1 0 0],[0 1 0],[0 0 0],[1 1 0]};
 F.linestyle='-';
 F.transp=0.3;
+F.patchedge = 'none';
+F.edgewidth = 0.1;
 leg={};
+leglocation='';%{'best'};
 plotfcn='nanmean';
 errorfcn='';
 subset=[];
@@ -42,12 +45,12 @@ YLim=[];
 c=1;
 while(c<=length(varargin))
     switch(varargin{c})
-        case {'subset','split','leg','plotfcn','errorfcn','XLim','YLim'};
+        case {'subset','split','leg','leglocation','plotfcn','errorfcn','XLim','YLim'};
             eval([varargin{c} '=varargin{c+1};']);
             c=c+2;
         % Style tabs: single value sets it for all values, cell array puts
         % in the cat structure 
-        case {'linewidth','linecolor','patchcolor','linestyle','transp'}
+        case {'linewidth','linecolor','patchcolor','linestyle','transp','patchedge','edgewidth'}
             v=varargin{c+1}; 
             eval(['F.' varargin{c} '=v;']);  
             c=c+2;
@@ -115,12 +118,15 @@ for c=1:numcats
     else
         PLOT(c,:)=fcneval(plotfcn,(A{c,2}));
     end;
-    h(c)=plot(t,PLOT(c,:));hold on;
-    set(h(c),'LineWidth',fm.linewidth,'Color',fm.linecolor,'LineStyle',fm.linestyle)
     if (~isempty(errorfcn) & size(A{c,2},1)>1)
         ERR(c,:)=fcneval(errorfcn,A{c,2});
-        p(c)=plotshade(t,PLOT(c,:),ERR(c,:),'patchcolor',fm.patchcolor,'transp',fm.transp);hold on;
+        p(c)=plotshade(t,PLOT(c,:),ERR(c,:),'patchcolor',fm.patchcolor,...
+            'transp',fm.transp,'edgecolor',fm.patchedge,...
+            'edgewidth',fm.edgewidth);hold on;
     end;
+    h(c)=plot(t,PLOT(c,:));hold on;
+    set(h(c),'LineWidth',fm.linewidth,'Color',fm.linecolor,'LineStyle',fm.linestyle)
+    
 end;
 set(gca,'Box','off','NextPlot',holding);
 if (~isempty(XLim))
@@ -135,7 +141,7 @@ end;
 % Do legend 
 if (~isempty(split))
     R=vertcat(A{:,1});
-    plotlegend(h,leg,R,split_conv);
+    plotlegend(h,leg,R,split_conv,leglocation);
 end;
 
 figure(gcf);
